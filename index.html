@@ -1,0 +1,338 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новогодний праздничный адвент-календарь от Суши Мастер</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script> 
+    <link rel="stylesheet" href="main.css">  
+    <script src="cards.js"></script>
+    <script src="promotions.js"></script>
+</head>
+<body>
+
+<audio loop id="audioMain">
+    <source src="music/jingle_bells_7.mp3" type="audio/mpeg">    
+    Проигрывание музыки не поддерживается.
+</audio>
+
+<div id = "start-screen-id" class="start-screen">
+    <div>
+        <div style="margin-top: 20px;">
+            <img src="pic/logo.png" alt="logo_pic">
+        </div>
+        <div style="display: flex; justify-content: center; overflow: hidden; margin-top: -40px;">
+            <img src="pic/cat.png" alt="cat_pic" style="height: 560px; width: auto; flex-shrink: 0;">
+        </div>
+        <div style="margin-top: -280px;">
+            <img src="pic/new_year_text.png" alt="new_year_pic">
+        </div>        
+        <div class="text_14_white" style="margin-top: 20px; margin-left: 20px; margin-right: 20px;">
+            <p> Привет, дорогой друг! Ну вот и пришел декабрь – время уюта, семейного тепла и предпраздничных хлопот! </p>
+        </div>       
+        <div style="margin-top: 20px;">            
+            <button id="show-rules" class="button-common button-common-rules">Читать правила</button>      
+        </div>                
+        <div style="margin-top: 20px;">            
+            <button id="start-game" class="button-common">Начать игру</button>      
+        </div>                                                     
+    </div>
+    </div>   
+</div>
+
+
+<div id = "rules-screen-id" class="rules-screen">
+    <div>
+        <div style="margin-top: 40px;">
+            <img src="pic/logo.png" alt="logo_pic">
+        </div>
+
+        <div style="margin-top: 20px;">
+            <img src="pic/rules_game_text.png" alt="new_year_pic">
+        </div>        
+        
+        <div class="rules-screen-body">
+            <p> Всё проще, чем скрутить ролл: <br><br>
+                1. Открывай новое окошко каждый день <br>
+                2. Забирай доброе пожелание и подарок от <b>Суши Мастер</b> <br>
+                3. Создавай новогоднее настроение шаг за шагом! <br><br>
+
+                Встречаем праздники и помним: Всё получится! 🎄               
+            </p>
+        </div>   
+         <div style="margin-top: -30px;">
+            <img src="pic/rules_pic.png" alt="rules_pic">
+        </div>
+        
+        <div style="margin-top: 10px;">            
+            <button id="start-game2" class="button-common">Начать игру</button>      
+        </div>
+    </div>   
+</div>
+
+<div id = "event_calendar_screen_id" class="event-calendar-screen-container">   
+    <div class="container grid-row" style="background-color: transparent;">
+        <div class="top-bar-parent-container">
+            <button id="music-off" class="music-button">
+                <img src="pic/sound_on.png" alt="turn_sound_pic">
+            </button>                                                
+        </div>
+        <div class="top-bar-parent-container">
+            <p id="data-today-text" class="text_black_white_picture_regular_24_white"> </p>
+        </div>
+    </div>        
+                
+    <div class="card-grid">        
+        <div id="cards-container"></div>
+    </div>                  
+</div>
+
+<div id="open-card-id" class="open-card">   
+
+    <div style="margin-top: -40px;">
+        <img src="pic/logo.png" alt="logo_pic">
+    </div>
+
+    <div style="display: flex; justify-content: center; overflow: hidden;">
+        <img src="pic/gift_open_card.png" alt="card_pic" style="height: 200px; width: auto; flex-shrink: 0;">
+    </div>
+    
+    <div class="card-content">                              
+        <div class="card-number-container">
+            <img src="pic/card_number_bg.png" alt="card_main_bg">
+            <span id="card-number-id" class="card-number">1</span>
+        </div>
+        <div class="congratulation-text-body">
+            <p id="congratulation-text">Новый год подаст тебе моменты, которые хочется пересмотреть, как любимый фильм</p>
+        </div>
+        <div class="gift-text">
+            <p id="card-name"></p>
+        </div>
+        <div class="open-card-button-container">
+            <button id="take-promocode-button" class="button-common">Забрать</button>
+        </div>
+        <div class="open-card-button-container">
+            <button id="return-game-button" class="button-common button-common-rules">Назад</button>
+        </div>
+        <div>
+            <p id="condition-full-text-id" class="text_10_black">Действует с 1.12.25 по 31.12.25. Не суммируется с другими акциями, бонусами, промокодами и скидками</p>
+        </div>
+    </div>
+</div>
+
+<script>
+
+let currentCardIndex;
+let rowsContainer = document.getElementById('cards-container');
+let isMusicPlay = true;
+let audioMain = document.getElementById("audioMain");
+
+document.getElementById('open-card-id').style.display = "none";
+
+document.getElementById('start-game').addEventListener('click', startGame);
+document.getElementById('start-game2').addEventListener('click', startGame);
+
+document.getElementById('show-rules').addEventListener('click', showRules);
+document.getElementById('music-off').addEventListener('click', switchMusic);
+
+document.getElementById('cards-container').addEventListener('click', function (event) {
+    if (!event.target.closest('.card')) return;
+
+    const index = event.target.closest('.card').dataset.index;
+    showOpenCard(parseInt(index));
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const todayElement = document.getElementById('data-today-text');
+    if (todayElement) {
+        const dateObj = getCurrentDateForUser();
+        todayElement.textContent = dateObj;
+    }    
+});
+
+
+// Функционал получения текущей даты
+function getCurrentDate() {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    return { day, month, year };
+}
+
+const months = [
+    'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+    'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+];
+
+function getCurrentDateForUser() {
+    const now = new Date();
+    const day = String(now.getDate());
+    const monthIndex = now.getMonth(); // месяцы отсчитываются с нуля
+    const year = now.getFullYear();
+    return `${day} ${months[monthIndex]} ${year}`;
+}
+
+
+
+document.getElementById("return-game-button").addEventListener("click", function () {
+    hideDialog(); // Скрыть диалог    
+});
+
+
+    function generateCards() {
+        let rowsContainer = document.getElementById('cards-container');
+        const currentDate = getCurrentDate(); 
+
+        for (let i = 0; i < Math.ceil(cards.length / 3); i++) {
+            let rowDiv = document.createElement('div');
+            rowDiv.className = 'row';
+
+        for (let j = 0; j < 3 && ((i * 3) + j) < cards.length; j++) {
+            const cardData = cards[(i * 3) + j];
+            let cardDiv = document.createElement('div');
+            cardDiv.className = 'card';
+            if (i === Math.floor(cards.length / 3)) {
+                cardDiv.className += ' last-row-card';
+            }
+            
+            let backgroundImagePath;
+            let isAvailable = false; 
+            
+            if (Number.parseInt(currentDate.day) === Number.parseInt(cardData.number)) {
+                backgroundImagePath = 'pic/open_now_bg.png';
+                isAvailable = true; // Можно открыть
+            } else if (Number(currentDate.day) > Number(cardData.number)) {
+                backgroundImagePath = 'pic/opened_bg.png';
+                isAvailable = true
+            } else {
+                backgroundImagePath = 'pic/can_open_bg.png';                
+            }
+                
+
+            cardDiv.style.backgroundImage = `url(${backgroundImagePath})`;
+
+            // Основная разметка карточки
+            cardDiv.innerHTML = `
+                <img src="${cardData.imageUrl}" alt=""/>
+            `;
+
+            cardDiv.setAttribute('data-index', (i * 3) + j);
+            cardDiv.dataset.isAvailable = isAvailable; // Сохраняем флаг доступности
+
+            // Кружок с номером
+            let circleDiv = document.createElement('div');
+            circleDiv.className = 'circle-number';
+            circleDiv.style.position = 'absolute';
+            circleDiv.style.left = '50%';
+            circleDiv.style.transform = 'translateX(-50%)';
+            circleDiv.style.top = '10px';
+            circleDiv.style.width = '30px';
+            circleDiv.style.height = '30px';
+            circleDiv.style.backgroundImage = `url('pic/cifra_back.png')`;
+            circleDiv.style.backgroundSize = 'cover';
+            circleDiv.style.borderRadius = '50%';
+            circleDiv.style.display = 'flex';
+            circleDiv.style.alignItems = 'center';
+            circleDiv.style.justifyContent = 'center';
+
+            // Цифра внутри кружка
+            let numberSpan = document.createElement('span');
+            numberSpan.className = 'circle-text';
+            numberSpan.style.color = '#fff';
+            numberSpan.style.fontSize = '14px';
+            numberSpan.textContent = `${cardData.number}`;
+            circleDiv.appendChild(numberSpan);
+
+            // Добавляем кружок в карточку
+            cardDiv.appendChild(circleDiv);
+            rowDiv.appendChild(cardDiv);
+        }
+        rowsContainer.appendChild(rowDiv);
+    }
+}
+
+           
+    function startGame() {
+        generateCards()        
+        document.getElementById('event_calendar_screen_id').style.display = "block";        
+        document.getElementById('start-screen-id').style.display = "none";
+        document.getElementById('rules-screen-id').style.display = "none";       
+        audioMain.volume = 0.2;                
+        audioMain.play();           
+    }
+
+    function showRules() {
+        document.getElementById('rules-screen-id').style.display = "block";
+        document.getElementById('start-screen-id').style.display = "none";                    
+    }
+    
+           
+    function showResultScreen() {
+        document.getElementById('main_questions_screen_id').style.display = "none";
+        document.getElementById('game_stage_screen_id').style.display = "block";
+    }
+
+    function switchMusic() {
+    const button = document.getElementById('music-off');
+    const image = button.querySelector('img');
+
+    if (isMusicPlay) {
+        audioMain.pause();
+        isMusicPlay = false;
+        // Меняем картинку на новую
+        image.src = 'pic/sound_off.png';
+    } else {
+        audioMain.play();
+        isMusicPlay = true;
+        // Возвращаем исходную картинку
+        image.src = 'pic/sound_on.png';
+    }
+}       
+    
+    function showOpenCard(index) {
+    
+    document.getElementById("event_calendar_screen_id").style.display = "none";
+    document.getElementById("open-card-id").style.display = "flex";
+
+    const selectedCard = cards[index];
+    const selectedCardPromotion = promotions[index];
+    const cardEl = document.querySelector(`.card[data-index='${index}']`);
+
+    if (cardEl.dataset.isAvailable !== 'true') {
+        alert('Эта дата еще не наступила! Если торопить Деда Мороза, он перепутает все подарки');
+        hideDialog();
+        return;
+    }
+    
+    document.getElementById('card-number-id').innerHTML = index + 1;
+    document.getElementById('congratulation-text').innerHTML = selectedCard.text;
+    
+    let cardConditionText = selectedCardPromotion.condition.split('.')[0].trim(); // получаем первое предложение    
+    document.getElementById('card-name').innerHTML = `${cardConditionText}.`;
+    document.getElementById('condition-full-text-id').innerHTML = `*${selectedCardPromotion.condition}`;
+    
+    currentCardIndex = index + 1;
+    }
+
+
+    function hideDialog() {        
+        document.getElementById('open-card-id').style.display = "none";
+        document.getElementById("event_calendar_screen_id").style.display = "block";    
+    }
+
+   
+</script>
+
+<script>
+    let tg = window.Telegram.WebApp; 
+    tg.expand(); 
+              
+    document.getElementById('take-promocode-button').addEventListener('click', function(){
+        tg.sendData(currentCardIndex.toString());      
+    });           
+    
+ </script>
+</body>
+</html>

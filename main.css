@@ -1,0 +1,388 @@
+
+@font-face {    
+    font-family: 'Pusia'; 
+    src: url('fonts/pusia_bold.otf') format('truetype') 
+}
+@font-face {
+    font-family: 'Commissioner'; 
+    src: url('fonts/commissioner.ttf') format('truetype')                     
+}
+
+@font-face {
+    font-family: 'black_picture'; 
+    src: url('fonts/black_picture.ttf') format('truetype')                     
+}
+body {
+    font-family: 'Pusia', Arial, sans-serif;    
+    background-color: #f0f0f0;
+    margin: 0;    
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;            
+}
+
+.event-calendar-screen-container {
+    position: fixed;
+    display: none;
+    justify-content: center;
+    overflow-y: auto;
+    max-height: 100vh;
+    align-items: center;    
+    background-image: url('pic/start_screen_bg4.jpg');
+    background-size: auto;
+    background-repeat: round;
+}
+        
+.card-grid {
+    position: relative;
+    width: fit-content;
+    padding: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+    padding-left: 40px;
+    padding-right: 40px;    
+    align-items: center;            
+    z-index: 1;               
+}
+
+.cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;            
+    background-color: #c5cac0;         
+    pointer-events: none;
+}
+        
+        /* Карточки */
+.row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+        
+.card {
+    display: flex;          /* Включаем режим Flexbox */
+    align-items: center;    /* Горизонтальное выравнивание по центру */
+    justify-content: center; /* Вертикальное выравнивание по центру */
+    position: relative;     /* Позиционирование номера */
+    width: 100px;           /* Ширина карточки */
+    height: 150px;          /* Высота карточки */
+    background-image: url('pic/open_now_bg.png'); /* Ваш фон */
+    background-size: cover; /* Масштабируем фон */
+    background-position: center; /* Расположение фона по центру */
+}
+
+.card .card-number {
+    position: absolute;     /* Абсолютное позиционирование номера */
+    top: 5px;               /* Верхнее положение */
+    left: 5px;              /* Левое положение */
+}
+
+.card img {
+    margin-top: 20px;
+    max-width: 80%;        /* Ограничиваем максимальную ширину изображения */
+    max-height: 80%;       /* Ограничиваем максимальную высоту изображения */
+    object-fit: contain;    /* Сохраняем пропорции изображения */
+}
+
+.card:hover {
+        transform: scale(1.05);
+    }       
+
+.music-button {   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    width: 80px;                 
+    outline: none;             /* Удаление контура при фокусировке */
+    cursor: pointer;          /* Курсор вида 'рука' при наведении */
+    background-color: transparent;
+    transition: all 0.3s ease-in-out;
+    box-shadow: none;
+    border: none;    
+}
+
+.music-button:hover {
+    transform: scale(1.1);
+}
+
+.music-button img {
+    max-width: 100%;           /* Изображение растягивается на всю ширину кнопки */
+    height: auto; 
+}
+.start-screen {                 
+    width: 375px; 
+    height: 734px;
+    text-align: center;                        
+    border-radius: 10px;            
+    background-image: url('pic/start_screen_bg.png'); /* Путь к изображению */
+    background-size: cover;
+    background-position: center; /* Центруем изображение */
+    background-repeat: no-repeat; /* Изображение не повторяется */
+}
+.rules-screen {            
+    display: none; /* Скрываем диалог по умолчанию */
+    width: 375px;             
+    height: 734px;
+    text-align: center;                        
+    border-radius: 10px;            
+    background-image: url('pic/start_screen_bg.png'); /* Путь к изображению */
+    background-size: cover;
+    background-position: center; /* Центруем изображение */
+    background-repeat: no-repeat; /* Изображение не повторяется */
+}
+
+.open-card {
+    display: flex;
+    flex-direction: column;   /* блоки друг под другом */
+    justify-content: center;  /* по центру по вертикали */
+    align-items: center;      /* по центру по горизонтали */
+    position: fixed;
+    width: 375px;
+    height: 734px;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+    background-image: url('pic/open_card_bg.png');
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.open-card-gift-container {    
+    width: 158px;
+    height: 172px;
+    position: absolute; /* Делаем изображение абсолютным */
+    top: -135px; /* Смещаем изображение вверх на 50px */
+    left: 50%; /* Центрируем изображение по горизонтали */
+    transform: translateX(-50%); /* Точное центрирование по горизонтали */
+}
+
+.card-content {
+    width: 65%;    
+    margin-top: -40px;
+    background-color: #acbeb9;
+    border-radius: 16px;        
+    padding: 20px;
+    position: relative;    
+}
+
+.card-number-container {
+    position: absolute;
+    top: -120px; /* Смещаем контейнер вверх */
+    left: 50%; /* Центрируем контейнер по горизонтали */
+    transform: translateX(-50%); /* Точное центрирование по горизонтали */
+    z-index: 1; /* Устанавливаем порядок наложения */
+}
+
+.card-number-container img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.card-number {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: #e20a17;
+    z-index: 2; /* Устанавливаем порядок наложения */
+}
+
+.open-card-button-container {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+     
+.grid-row { 
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    height: 100px;
+}
+
+.top-bar-parent-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.button-common {           
+    width: 327px;
+    height: 64px;           
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    font-family: 'Commissioner', Arial, sans-serif;                
+    text-transform: uppercase;                        
+    cursor: pointer;
+    background-color: transparent;
+    transition: all 0.3s ease-in-out;
+    box-shadow: none;
+    border: none;
+    background-image: url('pic/start_game_bg.png');
+    background-size: contain;
+    background-position: center; 
+    background-repeat: no-repeat;                         
+}
+
+.button-common-rules {
+    background-image: url('pic/read_rules_bg.png');               
+}        
+
+.button-common:hover {
+    transform: scale(1.1);               
+}   
+
+.hidden {
+    display: none; /* Элемент полностью скрыт */
+} 
+
+.image-start-screen {        
+    display: flex;    
+    justify-content: center;    
+    margin-top: 20px;    
+}
+
+.image-start-screen img {
+    width: 60%;
+    height: 60%;    
+    margin: auto; /* Отцентрируем изображение внутри контейнера */
+}
+
+.image-event-calendar-footer-screen {        
+    display: flex;    
+    justify-content: center;    
+}
+
+.start-screen-body {       
+    width: 90%; 
+    height: 120px;    
+    font-size: 16px;      
+    color: #322A22;
+    font-weight: bold;
+    text-transform: uppercase;       
+    border-radius: 16px;    
+    font-family: 'Commissioner', Arial, sans-serif;        
+    text-align: center;
+    line-height: 120%;
+}
+
+.rules-screen-body {        
+    width: auto;   
+    font-size: 18px;
+    margin-top: -20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    color: #322A22;   
+    padding: 10px;   
+    background-color: #ffffff;    
+    border-radius: 32px;    
+    font-family: 'Commissioner', Arial, sans-serif;            
+    line-height: 120%;
+}
+
+.congratulation-text-body {           
+    padding: 10px;  
+    font-size: 12px;    
+    color: white;      
+    background-color: #e20a17;   
+    border-radius: 16px;    
+    font-family: 'Commissioner', Arial, sans-serif;        
+    text-align: center;    
+}
+
+.title_28_black {    
+    font-size: 18px;
+    line-height: 1;    
+    color: #2B2A29;
+    font-weight: bold;    
+    font-family: 'Pusia', Arial, sans-serif;        
+    text-align: center;
+}
+
+.title_28_white {
+    margin-top: 20px;
+    font-size: 28px;
+    line-height: 1;    
+    color: #FFFF;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: 'Commissioner', Arial, sans-serif;        
+    text-align: center;
+}
+
+.text_14_white {
+    margin-top: 20px;
+    font-size: 14px;
+    line-height: 1;    
+    color: #FFFF;
+    font-weight: normal;    
+    font-family: 'Commissioner', Arial, sans-serif;        
+    text-align: center;
+    line-height: 120%;
+}
+
+.text_14_black {    
+    font-size: 14px;
+    line-height: 1;    
+    color: black;
+    font-weight: normal;
+    font-family: 'Commissioner', Arial, sans-serif;        
+    text-align: center;    
+}
+
+.text_10_black {    
+    font-size: 10px;
+    line-height: 1;    
+    color: black;
+    font-weight: 600;
+    font-family: 'Commissioner', Arial, sans-serif;        
+    text-align: justify;
+}
+
+.text_10_white {    
+    font-size: 10px;
+    line-height: 1;    
+    color: white;
+    font-weight: normal;    
+    font-family: 'Commissioner', Arial, sans-serif;        
+    text-align: center;
+}
+
+.text_black_white_picture_regular_24_white {        
+    font-size: 32px;
+    line-height: 1;    
+    color: #FFFF;
+    font-weight: normal;
+    font-style: italic;
+    font-family: 'black_picture', Arial, sans-serif;        
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+
+
+
+
+
+
+
+
+
+    
